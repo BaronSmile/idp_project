@@ -1,8 +1,8 @@
 import React, {useState, useEffect} from 'react';
 import {useNavigate, useParams, Link} from "react-router-dom";
 import "./AddEdit.css";
+import {api} from '../App';
 import {dataHeroes} from "../dataHeroes";
-import axios from "axios";
 import {toast} from "react-toastify";
 
 type HeroState = {
@@ -30,15 +30,13 @@ const AddEdit = () => {
 
 
   useEffect(() => {
-    axios.get(`http://localhost:5000/api/get/${id}`)
+    api.get(`/get/${id}`)
       .then((resp) => {
         if (id) {
           const dateString = new Date(resp.data[0].date)
-          console.log('ID')
           const formatDate = `${dateString.getFullYear()}-${(dateString.getMonth() + 1).toString().padStart(2, '0')}-${(dateString.getDate()).toString().padStart(2, '0')}`;
           setState({...resp.data[0], date: formatDate})
         } else {
-          console.log('RES', resp.data[0])
           setState({...resp.data[0]})
         }
       })
@@ -53,13 +51,13 @@ const AddEdit = () => {
       toast.error("Please provide value into each input field");
     } else {
       if (!id) {
-        axios.post("http://localhost:5000/api/post", {attribute, hero, status, fraction, date})
+        api.post("/post", {attribute, hero, status, fraction, date})
           .then(() => {
             setState({attribute, hero, status, fraction, date})
           }).catch((err) => toast.error(err.response.data));
         toast.success('Contact Updated Successfully')
       } else {
-        axios.put("http://localhost:5000/api/update/" + id, {attribute, hero, status, fraction, date})
+        api.put("/update/" + id, {attribute, hero, status, fraction, date})
           .then(() => {
             setState(initialState)
           }).catch((err) => toast.error(err.response.data));

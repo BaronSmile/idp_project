@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import {Link} from "react-router-dom";
 import "./Home.css";
 import {toast} from "react-toastify";
-import axios from "axios";
+import {api} from '../App';
 import strengthIcon from '../assets/icon/Strength.png';
 import agilityIcon from '../assets/icon/Agility.png';
 import intelligenceIcon from '../assets/icon/Intelligence.png';
@@ -43,21 +43,26 @@ const Home = () => {
     [Attribute.UNIVERSAL]: universalIcon,
   };
   const loadData = async () => {
-    const response = await axios.get("http://localhost:5000/api/get");
+    const response = await api.get("/get");
     setData(response.data);
   };
 
   useEffect(() => {
     loadData();
-  }, []);
+  }, [data]);
 
-  const deleteContact = (id:number) => {
+  const deleteHero = async (id: number) => {
+    // if (window.confirm("Are you sure that you wanted to delete that hero?")){
+    //     api.delete(`/remove/${id}`);
+    //     toast.success("Hero Deleted Successfully");
+    //     setTimeout(()=>loadData(),500)
+    //   }
+    toast.success("Hero Deleted Successfully");
     if (window.confirm("Are you sure that you wanted to delete that hero?")){
-      axios.delete(`http://localhost:5000/api/remove/${id}`);
-      toast.success("Hero Deleted Successfully");
-      setTimeout(()=>loadData(),500)
+        await api.delete(`/remove/${id}`);
+        await loadData();
     }
-  }
+  };
 
   return (
     <div className={'home_wrapper'}>
@@ -77,7 +82,7 @@ const Home = () => {
         </tr>
         </thead>
         <tbody>
-        {data.map((item, index) => {
+         {data && data.map((item, index) => {
           const date = new Date(item.date);
           const formatDate = `${(date.getDate()).toString().padStart(2, '0')}.${(date.getMonth() + 1).toString().padStart(2, '0')}.${date.getFullYear()}`;
           const iconAttribute = attributeIcons[item.attribute as keyof typeof attributeIcons];
@@ -94,7 +99,7 @@ const Home = () => {
                 <Link to={`/update/${item.id}`}>
                   <button className="btn btn-edit">Edit</button>
                 </Link>
-                <button className="btn btn-delete" onClick={() => deleteContact(item.id)}>Delete</button>
+                <button className="btn btn-delete" onClick={() => deleteHero(item.id)}>Delete</button>
               </td>
             </tr>
           )

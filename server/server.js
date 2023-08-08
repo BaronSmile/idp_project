@@ -1,16 +1,10 @@
 import express from "express";
 import cors from "cors";
-import mysql from "mysql2";
+import {db} from './config.js'
 import bodyParser from "body-parser";
-import path from 'path';
 
 const app = express();
-const db = mysql.createPool({
-  host: "localhost",
-  user: "root",
-  password: "0703009814Az",
-  database: "dota2"
-});
+
 
 app.use(cors());
 app.use(express.json());
