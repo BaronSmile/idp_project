@@ -17,7 +17,7 @@ type HeroState = {
   date: any;
 };
 
-const initialState:HeroState = {
+const initialState: HeroState = {
   id: 0,
   attribute: '',
   hero: '',
@@ -47,22 +47,22 @@ const Home = () => {
     setData(response.data);
   };
 
-  useEffect(() => {
-    loadData();
-  }, [data]);
-
-  const deleteHero = async (id: number) => {
+  const deleteHero = async(id: number) => {
     // if (window.confirm("Are you sure that you wanted to delete that hero?")){
     //     api.delete(`/remove/${id}`);
     //     toast.success("Hero Deleted Successfully");
     //     setTimeout(()=>loadData(),500)
     //   }
-    toast.success("Hero Deleted Successfully");
-    if (window.confirm("Are you sure that you wanted to delete that hero?")){
-        await api.delete(`/remove/${id}`);
-        await loadData();
+    if (window.confirm("Are you sure that you wanted to delete that hero?")) {
+      await api.delete(`/remove/${id}`);
+      toast.success("Hero Deleted Successfully");
+      loadData();
     }
   };
+
+  useEffect(() => {
+    loadData();
+  }, []);
 
   return (
     <div className={'home_wrapper'}>
@@ -82,7 +82,7 @@ const Home = () => {
         </tr>
         </thead>
         <tbody>
-         {data && data.map((item, index) => {
+        {data && data.map((item, index) => {
           const date = new Date(item.date);
           const formatDate = `${(date.getDate()).toString().padStart(2, '0')}.${(date.getMonth() + 1).toString().padStart(2, '0')}.${date.getFullYear()}`;
           const iconAttribute = attributeIcons[item.attribute as keyof typeof attributeIcons];
