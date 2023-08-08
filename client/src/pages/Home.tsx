@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Link} from "react-router-dom";
 import "./Home.css";
 import {toast} from "react-toastify";
@@ -35,34 +35,38 @@ enum Attribute {
 
 const Home = () => {
   const [data, setData] = useState<HeroState[]>([initialState]);
-
   const attributeIcons = {
     [Attribute.STRENGTH]: strengthIcon,
     [Attribute.AGILITY]: agilityIcon,
     [Attribute.INTELLIGENCE]: intelligenceIcon,
     [Attribute.UNIVERSAL]: universalIcon,
   };
+
   const loadData = async () => {
     const response = await api.get("/get");
+    console.log('LoadData');
     setData(response.data);
   };
 
-  const deleteHero = async(id: number) => {
-    // if (window.confirm("Are you sure that you wanted to delete that hero?")){
-    //     api.delete(`/remove/${id}`);
-    //     toast.success("Hero Deleted Successfully");
-    //     setTimeout(()=>loadData(),500)
-    //   }
+  useEffect(() => {
+    loadData()
+  }, []);
+
+
+
+  const deleteHero = async (id: number) => {
     if (window.confirm("Are you sure that you wanted to delete that hero?")) {
-      await api.delete(`/remove/${id}`);
-      toast.success("Hero Deleted Successfully");
-      loadData();
+      try {
+        await api.delete(`/remove/${id}`);
+        console.log('DELETE')
+        toast.success("Hero Deleted Successfully");
+        await loadData();
+      } catch (error) {
+        console.error("Failed to delete hero:", error);
+      }
     }
   };
 
-  useEffect(() => {
-    loadData();
-  }, []);
 
   return (
     <div className={'home_wrapper'}>

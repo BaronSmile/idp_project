@@ -73,8 +73,6 @@ const AddEdit = () => {
     setState({...state, [name]: value})
   }
 
-  console.log(state)
-
   return (
     <div style={{marginTop: "100px"}}>
       <form style={{

@@ -35,6 +35,7 @@ app.post("/api/post", (req, res) => {
     if (error) {
       console.log(error)
     }
+    res.send(result)
   }
 });
 
@@ -45,6 +46,7 @@ app.delete("/api/remove/:id", (req, res) => {
     if (error) {
       console.log(error)
     }
+    res.send(result)
   })
 });
 
